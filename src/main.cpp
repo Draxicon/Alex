@@ -12,6 +12,8 @@ int moistureValue = 0;
 #define SCREEN_ADDRESS 0x3C
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 
+void moisturelvl(int moistureValue);
+
 void setup()
 {
   pinMode(soilSensor, INPUT);
@@ -22,15 +24,37 @@ void setup()
     for(;;);
   }
   
-  display.clearDisplay();
-  display.drawBitmap(0,0, smiley, 128, 64, SSD1306_WHITE);
-  display.display();
-  delay(5000);
+  
+
 }
 
 void loop()
 {
   moistureValue = analogRead(soilSensor);
-  Serial.printf("value = %d\n", moistureValue);
+  moisturelvl(moistureValue);
   delay(5000);
+}
+
+void moisturelvl(int moistureValue)
+{
+
+  if( moistureValue < 510 && moistureValue > 480 )
+  {
+    Serial.printf("Dry: %d\n", moistureValue);
+    display.clearDisplay();
+    display.display();
+  }
+  else  if( moistureValue < 480 && moistureValue > 350 )
+  {
+    Serial.printf("Moist: %d\n", moistureValue);
+    display.clearDisplay();
+    display.drawBitmap(0,0, smiley, 128, 64, SSD1306_WHITE);
+    display.display();
+  }
+  else if(moistureValue < 350 && moistureValue > 0)
+  {
+    Serial.printf("too wet: %d\n", moistureValue);
+    display.clearDisplay();
+    display.display();
+  }
 }
