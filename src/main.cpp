@@ -3,6 +3,9 @@
 #include <Adafruit_SSD1306.h>
 #include "smiley.h"
 
+int soilSensor = 14;
+int moistureValue = 0;
+
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
 
@@ -11,6 +14,7 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 
 void setup()
 {
+  pinMode(soilSensor, INPUT);
   Serial.begin(9600);
   if(!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS))
   {
@@ -26,5 +30,7 @@ void setup()
 
 void loop()
 {
-
+  moistureValue = analogRead(soilSensor);
+  Serial.printf("value = %d\n", moistureValue);
+  delay(5000);
 }
